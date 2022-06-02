@@ -9,7 +9,6 @@ function Root() {
   return (
     <AppLayout>
       <Routes>
-        최상위 컴포넌트!!
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/accounts/*" element={<AccountsRoutes />} />
