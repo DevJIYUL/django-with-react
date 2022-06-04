@@ -1,5 +1,6 @@
 .app {
     display: grid;
+    gap: 1rem;
     grid-template-columns: repeat(3,1fr);
     grid-template-areas: 
         "header header header"
@@ -8,8 +9,8 @@
     ;
 
 
-    background-color: lightcoral;
-    border : 3px solid black;
+    // background-color: lightcoral;
+    // border : 3px solid black;
     width: 1024px;
     max-width: 100%;
     margin: 10px auto;

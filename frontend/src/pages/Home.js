@@ -1,7 +1,8 @@
+import PostList from "components/PostList";
 import React from "react";
 
 function Home() {
-  return <div>최상위 컴포넌트 home</div>;
+  return <PostList />;
 }
 
 export default Home;

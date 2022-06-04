@@ -1,12 +1,17 @@
 import React from "react";
 import { Input, Menu } from "antd";
 import "./AppLayout.scss";
-
+import StoryList from "./StoryList";
+import SuggestionList from "./SuggestionList";
+import { InstagramOutlined } from "@ant-design/icons";
 function AppLayout({ children }) {
   return (
     <div className="app">
       <div className="header">
-        <h1 className="page-title">Instagram</h1>
+        <h1 className="page-title">
+          <InstagramOutlined />
+          instagram
+        </h1>
         <div className="search">
           <Input.Search />
         </div>
@@ -19,8 +24,11 @@ function AppLayout({ children }) {
         </div>
       </div>
       <div className="contents">{children}</div>
-      <div className="footer">footer</div>
-      <div className="sidebar">Sidebar</div>
+      <div className="sidebar">
+        <StoryList style={{ marginBottom: "1rem" }} />
+        <SuggestionList />
+      </div>
+      <div className="footer">&copy; 2020.Jul</div>
     </div>
   );
 }
