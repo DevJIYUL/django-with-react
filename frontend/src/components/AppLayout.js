@@ -5,6 +5,7 @@ import StoryList from "./StoryList";
 import SuggestionList from "./SuggestionList";
 import { InstagramOutlined } from "@ant-design/icons";
 function AppLayout({ children }) {
+  console.log("!!!!!!!!!", children);
   return (
     <div className="app">
       <div className="header">
