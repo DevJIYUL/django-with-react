@@ -1,57 +1,86 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { useHistory } from "react-router-dom";
-import { Alert } from "antd";
+import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, notification } from "antd";
 
 export default function Signup() {
-  const history = useHistory();
-  const [inputs, setInputs] = useState({ username: "", password: "" });
-  const [errors, setError] = useState({});
-  const [formDisabled, setformDisabled] = useState(true);
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+  const [fieldErrors, setFieldErrors] = useState({});
+  const onFinish = (values) => {
+    async function fn() {
+      const { username, password } = values;
+      setFieldErrors({});
+      const data = { username, password };
+      try {
+        await Axios.post("http://localhost:8000/accounts/signup/", data);
 
-    setError({});
-    Axios.post("http://localhost:8000/accounts/signup/", inputs)
-      .then((response) => {
-        history.push("/accounts/login");
-      })
-      .catch((error) => {
+        notification.open({
+          message: "회원가입 성공",
+          description: "로그인 페이지로 이동합니다",
+          icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+        });
+        navigate("/accounts/login");
+      } catch (error) {
         if (error.response) {
-          setError({
-            username: (error.response.data.username || []).join(" "),
-            password: (error.response.data.password || []).join(" "),
+          notification.open({
+            message: "회원가입 실패",
+            description: "아이디 암호를 확인해주세요",
+            icon: <FrownOutlined style={{ color: "#ff3333" }} />,
           });
+          const { data: fieldsErrorMesaages } = error.response;
+          setFieldErrors(
+            Object.entries(fieldsErrorMesaages).reduce(
+              (acc, [fieldName, errors]) => {
+                acc[fieldName] = {
+                  ValidateState: "error",
+                  help: errors.join(" "),
+                };
+                return acc;
+              },
+              {}
+            )
+          );
         }
-      });
+      }
+    }
+    fn();
   };
-  useEffect(() => {
-    const isEnabled = Object.values(inputs).every((s) => s.length > 0);
-    setformDisabled(!isEnabled);
-  }, [inputs]);
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setInputs((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <div>
-          <input type="text" name="username" onChange={onChange} />
-          {errors.username && <Alert type="error" message={errors.username} />}
-        </div>
-        <div>
-          <input type="password" name="password" onChange={onChange} />
-          {errors.password && <Alert type="error" message={errors.password} />}
-        </div>
-        <div>
-          <input type="submit" value="회원가입" disabled={formDisabled} />
-        </div>
-      </form>
-    </div>
+    <Form
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      onFinish={onFinish}
+      // onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[
+          { required: true, message: "Please input your username!" },
+          { min: 5, message: "최소 5글자 입력해주세요" },
+        ]}
+        hasFeedback
+        {...fieldErrors.username}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[{ required: true, message: "Please input your password!" }]}
+        {...fieldErrors.username}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
   );
 }
