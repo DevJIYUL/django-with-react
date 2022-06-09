@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from os.path import abspath,dirname,join
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
 
@@ -22,7 +21,6 @@ BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4yos3#(risd2o!a2n)l@9k@q$%labev)+$^bx=dl273v(==e%c'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -42,6 +40,7 @@ INSTALLED_APPS = [
     # third apps
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     # local apps
     'accounts',
     'instagram',
@@ -137,5 +136,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
+
