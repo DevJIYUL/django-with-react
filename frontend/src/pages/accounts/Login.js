@@ -4,10 +4,13 @@ import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Card, Form, Input, Button, notification } from "antd";
 import useLocalStorage from "utils/useLocalStorage";
+import { useAppContext } from "store";
+import { setToken } from "store";
 
 export default function Login() {
+  const { dispatch } = useAppContext();
   const navigate = useNavigate();
-  const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
+  // const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
   const [fieldErrors, setFieldErrors] = useState({});
   const onFinish = (values) => {
     async function fn() {
@@ -22,8 +25,8 @@ export default function Login() {
         const {
           data: { access: jwtToken },
         } = response;
-
-        setJwtToken(jwtToken);
+        dispatch(setToken(jwtToken));
+        // setJwtToken(jwtToken);
         notification.open({
           message: "로그인 성공",
           description: "로그인 페이지로 이동합니다",
