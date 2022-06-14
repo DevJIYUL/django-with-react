@@ -1,7 +1,6 @@
 import React, { createContext, useContext } from "react";
 import useReducerWithSideEffects, {
   UpdateWithSideEffect,
-  Update,
 } from "use-reducer-with-side-effects";
 
 import { getStrageItem, setStorageItem } from "utils/useLocalStorage";
@@ -14,6 +13,7 @@ const reducer = (prevState, action) => {
     const newState = {
       ...prevState,
       jwtToken,
+      isAuthenticated: true,
     };
     return UpdateWithSideEffect(newState, (state, dispatch) => {
       setStorageItem("jwtToken", jwtToken);
@@ -22,6 +22,7 @@ const reducer = (prevState, action) => {
     const newState = {
       ...prevState,
       jwtToken: "",
+      isAuthenticated: false,
     };
     return UpdateWithSideEffect(newState, (state, dispatch) => {
       setStorageItem("jwtToken", "");
@@ -30,8 +31,10 @@ const reducer = (prevState, action) => {
   return prevState;
 };
 export const AppProvider = ({ children }) => {
+  const jwtToken = getStrageItem("jwtToken", "");
   const [store, dispatch] = useReducerWithSideEffects(reducer, {
-    jwtToken: getStrageItem("jwtToken", ""),
+    jwtToken,
+    isAuthenticated: jwtToken.length > 0,
   });
   return (
     <AppContext.Provider value={{ store, dispatch }}>
